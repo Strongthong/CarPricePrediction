@@ -5,6 +5,9 @@ from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
 import warnings
+import pickle
+import requests
+import json
 
 class DataPipeLine :
 
@@ -114,12 +117,18 @@ class DataPipeLine :
         
         scaler = StandardScaler().fit(X_train)
         rescaledX = scaler.transform(X_train)
-        model = ExtraTreesRegressor(n_estimators=400)
-        model.fit(rescaledX, y_train)
+        regressor = ExtraTreesRegressor(n_estimators=400)
+        regressor.fit(rescaledX, y_train)
         # transform the validation dataset
         rescaledValidationX = scaler.transform(X_test)
-        predictions = model.predict(rescaledValidationX)
+        predictions = regressor.predict(rescaledValidationX)
         self.regressor_data=round(r2_score(y_test,predictions), 3)
+
+        pickle.dump(regressor, open('model.pkl','wb'))
+        pickle.dump(scaler, open('scaler.pkl','wb'))
+
+        model = pickle.load(open('model.pkl','rb'))
+        scaler= pickle.load(open('scaler.pkl','rb'))
 
     def run_pipeline(self):
         self.load_data()
