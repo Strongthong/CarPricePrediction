@@ -36,7 +36,7 @@ class Scrape_PipeLine:
     def fetch_listing_urls(self, main_page_listing_list):
         listing_urls = []
         for main_link in main_page_listing_list:
-            content = requests.get(main_link)
+            content = requests.get(main_link, headers=headers)
             soup = BeautifulSoup(content.text, 'lxml')
             links = soup.find_all('a')
             for link in links:
