@@ -3,6 +3,7 @@ import requests
 import pandas as pd
 import numpy as np
 import time
+import copy
 from datetime import datetime
 
 from sgcarmart_webscraper_functions import *  # Imports all defined webscraping functions
@@ -25,6 +26,7 @@ class Scrape_PipeLine:
 
         self.filename = 'sgcarmart_used_cars_prices_test_one_link'
         self.base_url = 'https://www.sgcarmart.com/used_cars/'
+        self.global_list = []
 
     def fetch_main_pages(self):
         main_page_listing_list = []
@@ -35,17 +37,24 @@ class Scrape_PipeLine:
 
     def fetch_listing_urls(self, main_page_listing_list):
         listing_urls = []
+        index = 0
         for main_link in main_page_listing_list:
             content = requests.get(main_link, headers=headers)
             soup = BeautifulSoup(content.text, 'lxml')
             links = soup.find_all('a')
+        
             for link in links:
                 suffix = link.get('href')
                 if ('ID=' in suffix) and ('DL=' in suffix):
                     listing_url = self.base_url + suffix
-                    listing_urls.append(listing_url)
+                    self.global_list.append(listing_url)
+                index += 1
+                print(index)
             time.sleep(1)
-        return list(set(listing_urls))
+        # print(list(set(listing_urls))[1])
+        listing_urls = list(set(listing_urls))
+
+        return 
 
 
     def fetch_data(self, listing_url):
@@ -147,24 +156,26 @@ class Scrape_PipeLine:
         
         except:
             data['POST_DATE'] = np.nan
-            
-        print(data['VEHICLE_TYPE'])
-        print(data)
-        
+        # print(data)
         return data
 
     def run_pipeline(self):
+        i = 0
         main_page_url = self.fetch_main_pages()
-        print(main_page_url)
-        listing_url = self.fetch_listing_urls(main_page_url)
-        if listing_url:
-            data = self.fetch_data(listing_url)
-            self.df = self.df._append(data, ignore_index=True)
-            self.df.to_csv("{}.csv".format(self.filename))
-            return self.df
-        else:
-            print("No valid listing URL found.")
-            return None
+        # listing_url = self.fetch_listing_urls(main_page_url)
+        self.fetch_listing_urls(main_page_url)
+        # print(listing_url)
+        self.global_list = list(set(self.global_list))
+        for listing in self.global_list:
+            if listing:
+                data = self.fetch_data(listing)
+                self.df = self.df._append(data, ignore_index=True)
+                self.df.to_csv("{}.csv".format(self.filename))
+                i += 1
+            else:
+                print("No valid listing URL found.")
+                return None
+        return self.df
 
 pipeline = Scrape_PipeLine()
 pipeline.run_pipeline()
