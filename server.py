@@ -1,9 +1,12 @@
 # Import libraries
 import numpy as np
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from sklearn.preprocessing import StandardScaler
 import pickle
 app = Flask(__name__)
+CORS(app)
+
 # Load the model
 model = pickle.load(open('model.pkl','rb'))
 scaler = pickle.load(open('scaler.pkl','rb'))

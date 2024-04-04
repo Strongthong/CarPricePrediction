@@ -104,6 +104,22 @@
 
                 <div class="row mb-3">
                     <div class="input-group mb-3">
+                        <label class="input-group-text" for="VEHICLE_TYPE">Vehicle Type</label>
+                        <select class="form-select" id="VEHICLE_TYPE">
+                          <option selected>Choose...</option>
+                          <option value="hatchback">Hatchback</option>
+                          <option value="MPV">MPV</option>
+                          <option value="mid-sized sedan">Mid-Sized Sedan</option>
+                          <option value="others">Others</option>
+                          <option value="suv">SUV</option>
+                          <option value="sports car">Sports Car</option>
+                          <option value="stationwagon">Stationwagon</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="input-group mb-3">
                         <label class="input-group-text" for="TRANSMISSION">Transmission</label>
                         <select class="form-select" id="TRANSMISSION">
                           <option selected>Choose...</option>
@@ -170,13 +186,15 @@
                       </div>
                 </div>
 
-                <button type="submit" id="getPrice" class="btn btn-primary mb-2" onclick="callAPI()">Predict Price</button>
+                <button type="button" id="getPrice" class="btn btn-primary mb-2">Predict Price</button>
+                <strong id="price" style="visibility: hidden;">Predicted Price: $</strong>
             </form>
         </div>
 
         <script>
-            const apiURL = "http://3.0.222.59:5000/api"
+            const apiURL = "http://localhost:5000/api"
             const send_button = document.getElementById("getPrice"); 
+            send_button.addEventListener("click", callAPI);
 
             function callAPI() {
                 const submitFormResp = fetch(apiURL, 
@@ -197,11 +215,20 @@
                             "MILEAGE_KM": document.getElementById("MILEAGE_KM").value,
                             "CAR_AGE": document.getElementById("CAR_AGE").value,
                             "TRANSMISSION": document.getElementById("TRANSMISSION").value,
+                            "VEHICLE_TYPE": document.getElementById("VEHICLE_TYPE").value,
                             "BRAND": document.getElementById("BRAND").value,
+                            "POST_AGE": 1
                         })
                     })
                     .then(submitFormResp => {
-                        console.log(submitFormResp)
+                        var data = submitFormResp.text()
+                        return data
+                    })
+                    .then(data => {
+                        console.log(data)
+                        predictPriceEle = document.getElementById("price");
+                        predictPriceEle.innerHTML += data;
+                        predictPriceEle.style.visibility = "visible";
                     })
             }
 
