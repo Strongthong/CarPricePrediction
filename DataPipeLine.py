@@ -38,20 +38,10 @@ class DataPipeLine :
         df_clean.drop('TRANSMISSION',axis=1,inplace=True)
         df_clean.rename(columns={'TRANSMISSION_CONVERT':"TRANSMISSION"}, inplace=True) 
 
-        veh_list=[]
-        for veh in df_clean['VEHICLE_TYPE'].unique():
-            veh_list.append(veh)
-
-        veh_list.sort()
-        out = map(lambda x:x.lower(), veh_list)
-        veh_list = list(out) 
-
-        df_clean['VEHICLE_TYPE']
-        df_encoded = pd.get_dummies(df_clean['VEHICLE_TYPE'], prefix='VEHICLE_TYPE')
-
-        # Concatenating the new columns to the original DataFrame
-        df_encoded = df_encoded.astype(int)
-        df_clean = pd.concat([df_clean, df_encoded], axis=1)
+        veh_list=['hatchback','luxury sedan', 'mpv', 'mid-sized sedan', 'others','suv','sports car','stationwagon']
+        df_clean['VEHICLE_TYPE'] = df_clean['VEHICLE_TYPE'].str.lower()
+        for veh_type in veh_list:
+            df_clean[veh_type] = df_clean['VEHICLE_TYPE'].apply(lambda x: 1 if x == veh_type else 0)
 
         df_clean2=df_clean
         df_clean2.loc[df_clean2['BRAND'] == 'Aston','BRAND'] = 'Aston Martin'
