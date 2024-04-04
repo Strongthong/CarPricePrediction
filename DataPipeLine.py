@@ -15,7 +15,7 @@ class DataPipeLine :
         self.data_path = data_source
         self.data = None
         self.regressor_data = None
-    
+
 
     def load_data(self):
         self.data = pd.read_csv(self.data_path)
@@ -87,7 +87,7 @@ class DataPipeLine :
         df_clean_log["OMV"] = df_clean_log['OMV'].apply(np.log)
         df_clean_log["ARF"] = df_clean_log['ARF'].apply(np.log)
         df_clean_log["COE_FROM_SCRAPE_DATE"] = df_clean_log['COE_FROM_SCRAPE_DATE'].apply(np.log)
-        #df_clean_log["DAYS_OF_COE_LEFT"] = df_clean_log['DAYS_OF_COE_LEFT'].apply(np.log)
+        df_clean_log["DAYS_OF_COE_LEFT"] = df_clean_log['DAYS_OF_COE_LEFT'].apply(np.log)
         df_clean_log["ENGINE_CAPACITY_CC"] = df_clean_log['ENGINE_CAPACITY_CC'].apply(np.log)
         df_clean_log["CURB_WEIGHT_KG"] = df_clean_log['CURB_WEIGHT_KG'].apply(np.log)
 
