@@ -63,10 +63,10 @@ def predict():
     else:
         car_age=0
 
-    # if data['POST_AGE']:
-    #     post_age=data['POST_AGE']
-    # else:
-    #     post_age=0
+    if data['POST_AGE']:
+        post_age=data['POST_AGE']
+    else:
+        post_age=0
     
     if data['TRANSMISSION']:
         transmission=data['TRANSMISSION'].lower()
@@ -133,7 +133,7 @@ def predict():
     final_array.append(no_of_owners)
     final_array.append(mileage_km)
     final_array.append(car_age)
-    # final_array.append(post_age)
+    final_array.append(post_age)
     final_array.append(transmission)
     final_array.extend(veh_type_list)
     final_array.extend(cat_type_list)

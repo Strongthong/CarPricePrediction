@@ -170,12 +170,12 @@
                       </div>
                 </div>
 
-                <button type="submit" id="getPrice" class="btn btn-primary mb-2">Predict Price</button>
+                <button type="submit" id="getPrice" class="btn btn-primary mb-2" onclick="callAPI()">Predict Price</button>
             </form>
         </div>
 
         <script>
-            const apiURL = "http://localhost:5000/api"
+            const apiURL = "http://3.0.222.59:5000/api"
             const send_button = document.getElementById("getPrice"); 
 
             function callAPI() {
